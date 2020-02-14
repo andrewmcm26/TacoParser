@@ -3,6 +3,8 @@ using System.Linq;
 using System.IO;
 using GeoCoordinatePortable;
 
+
+
 namespace LoggingKata
 {
     class Program
@@ -17,6 +19,16 @@ namespace LoggingKata
             // use File.ReadAllLines(path) to grab all the lines from your csv file
             // Log and error if you get 0 lines and a warning if you get 1 line
             var lines = File.ReadAllLines(csvPath);
+            
+            if(lines.Length == 0)
+            {
+                logger.LogError("Zero lines", new NullReferenceException());
+            }
+
+            if(lines.Length == 1)
+            {
+                logger.LogWarning("You are only entering one location");
+            }
 
             logger.LogInfo($"Lines: {lines[0]}");
 
@@ -24,15 +36,26 @@ namespace LoggingKata
             var parser = new TacoParser();
 
             // Grab an IEnumerable of locations using the Select command: var locations = lines.Select(parser.Parse);
+
             var locations = lines.Select(parser.Parse).ToArray();
 
+
             // DON'T FORGET TO LOG YOUR STEPS
-            // Grab the path from the name of your file
+            // Grab the path from the name of your file -- done in csvPath
+            
 
             // Now, here's the new code
 
             // Create two `ITrackable` variables with initial values of `null`. These will be used to store your two taco bells that are the furthest from each other.
             // Create a `double` variable to store the distance
+
+
+            var finalA = new TacoBell();
+            var finalB = new TacoBell();
+            finalA = null;
+            finalB = null;
+
+            double distance = 0;
 
             // Include the Geolocation toolbox, so you can compare locations: `using GeoCoordinatePortable;`
             // Do a loop for your locations to grab each location as the origin (perhaps: `locA`)
@@ -49,6 +72,28 @@ namespace LoggingKata
             // HINT:  You'll need two nested forloops
 
 
+            logger.LogInfo("Finding all distances between any two stores, and comparing each " +
+                "to return the farthest distance.");
+            for(int i = 0; i < locations.Length; i++)
+            {
+                var locA = locations[i];
+                var corA = new GeoCoordinate(locA.Location.Longitude, locA.Location.Latitude);
+                for(int j = 0; j < locations.Length; j++)
+                {
+                    var locB = locations[j];
+                    var corB = new GeoCoordinate(locB.Location.Longitude, locB.Location.Latitude);
+                    var testDistance = corA.GetDistanceTo(corB);
+                    if(testDistance > distance)
+                    {
+                        distance = testDistance;
+                        finalA = (TacoBell) locA;
+                        finalB = (TacoBell) locB;
+                    }
+                }
+            }
+
+            Console.WriteLine($"The two farthest Taco Bell Locations are {finalA.Name} and {finalB.Name}" +
+                $" with a distance of {Math.Round(distance * 0.000621371, 1)} miles.");
         }
     }
 }
