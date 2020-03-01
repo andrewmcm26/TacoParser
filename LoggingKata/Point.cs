@@ -5,7 +5,7 @@ namespace LoggingKata
     public struct Point
     {
         
-        public Point(double longitude, double latitude)
+        public Point(double latitude, double longitude)
         {
             Longitude = longitude;
             Latitude = latitude;

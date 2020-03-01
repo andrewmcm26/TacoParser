@@ -41,7 +41,7 @@ namespace LoggingKata
             var finalB = new TacoBell();
             finalA = null;
             finalB = null;
-
+            
             double distance = 0;
 
             
@@ -51,16 +51,16 @@ namespace LoggingKata
             for(int i = 0; i < locations.Length; i++)
             {
                 var locA = locations[i];
-                var corA = new GeoCoordinate(locA.Location.Longitude, locA.Location.Latitude);
+                var corA = new GeoCoordinate(locA.Location.Latitude, locA.Location.Longitude);
                 for(int j = 0; j < locations.Length; j++)
                 {
                     var locB = locations[j];
-                    var corB = new GeoCoordinate(locB.Location.Longitude, locB.Location.Latitude);
+                    var corB = new GeoCoordinate(locB.Location.Latitude, locB.Location.Longitude);
                     var testDistance = corA.GetDistanceTo(corB);
                     if(testDistance > distance)
                     {
                         distance = testDistance;
-                        finalA = (TacoBell) locA;
+                        finalA =(TacoBell) locA;
                         finalB = (TacoBell) locB;
                     }
                 }
